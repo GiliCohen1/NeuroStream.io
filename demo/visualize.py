@@ -1,4 +1,4 @@
-"""Run held-out EEG through the real worker code + trained CNN and write demo/report.html.
+"""Run held-out EEG through the real worker code + trained CNN, then rebuild the website in site/.
 
 Usage (repo root):  .venv/Scripts/python demo/visualize.py [--chunks 16] [--seed 5] [--open]
 Real: preprocessing (normalize + FFT), batching, gRPC client/server, CNN, alerting.
@@ -7,7 +7,6 @@ Stand-ins (no Docker): in-memory queue for Kafka, a validation function for the 
 from __future__ import annotations
 
 import argparse
-import html
 import logging
 import queue
 import sys
@@ -19,27 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "demo"), str(ROOT / "services" / "ml-server"), str(ROOT / "services" / "worker"), str(ROOT / "simulator")]
 
 from run_demo import generate_stubs, validate  # noqa: E402
+import build_site  # noqa: E402
 import motion  # noqa: E402
-import story  # noqa: E402
-
-BANDS = ["δ", "θ", "α", "β", "γ"]
-
-
-def svg_wave(sig: list[float], color: str, w: int = 360, h: int = 70) -> str:
-    lo, hi = min(sig), max(sig)
-    span = (hi - lo) or 1.0
-    pts = " ".join(f"{i / (len(sig) - 1) * w:.1f},{h - 4 - (v - lo) / span * (h - 8):.1f}" for i, v in enumerate(sig))
-    return f'<svg class="w" viewBox="0 0 {w} {h}" preserveAspectRatio="none"><polyline points="{pts}" fill="none" stroke="{color}" stroke-width="1.4"/></svg>'
-
-
-def svg_bands(b: list[float], color: str) -> str:
-    m = max(max(b), 1e-6)
-    bars = "".join(
-        f'<rect x="{i * 22 + 2}" y="{34 - b[i] / m * 28:.1f}" width="16" height="{b[i] / m * 28:.1f}" fill="{color}" opacity=".75"/>'
-        f'<text x="{i * 22 + 10}" y="46" text-anchor="middle" font-size="9" fill="#5b6b7b">{BANDS[i]}</text>'
-        for i in range(5))
-    return f'<svg viewBox="0 0 112 50" width="112" height="50">{bars}</svg>'
-
 
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -91,41 +71,12 @@ def main() -> None:
     client.close(); server.stop(0)
 
     ordered = sorted(cards.values(), key=lambda c: c["i"])
-    tp = sum(c["truth"] and c["alert"] for c in ordered); fn = sum(c["truth"] and not c["alert"] for c in ordered)
-    fp = sum(not c["truth"] and c["alert"] for c in ordered); tn = sum(not c["truth"] and not c["alert"] for c in ordered)
-
-    card_html = []
-    for c in ordered:
-        ok = c["truth"] == c["alert"]
-        color = "#a8322d" if c["alert"] else "#13808b"
-        verdict = f'<div class="verdict a">{story.icon("bell", 18)}ALERT' if c["alert"] else '<div class="verdict n">No alert'
-        note = "" if ok else ('<span class="flag">Missed seizure</span>' if c["truth"] else '<span class="flag">False alarm</span>')
-        card_html.append(f'''<div class="ep {'alert' if c['alert'] else ''}">
- <div class="row"><b>Epoch {c['i']}</b><span class="truth {'s' if c['truth'] else ''}">Ground truth: {'seizure' if c['truth'] else 'seizure-free'}</span></div>
- {svg_wave(c['raw'], color)}
- <div class="row"><div>{svg_bands(c['bands'], color)}</div>
-  {verdict}<small>P(seizure) {c['conf']:.3f}</small>{note}</div></div></div>''')
-
-    stages = [("Simulated bedside monitor", "replays held-out EEG"), ("Ingestion gateway", "validates input"), ("Message queue", "Kafka"),
-              ("Preprocessing worker", "normalize, FFT, batch"), ("Inference service", "1D CNN over gRPC"), ("Alert", "notify care team")]
-    chev = story.icon("chevron", 18)
-    flow = chev.join(f'<div class="stage">{html.escape(a)}<small>{html.escape(b)}</small></div>' for a, b in stages)
-    page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NeuroStream seizure detection</title><style>{story.CSS}{motion.CSS}</style></head><body>
-{story.render_top_html(motion.render_html(motion.build_data(ROOT)))}
-<div class="wrap"><section class="block"><h2 class="live">See it working</h2>
-<p class="sub">{len(ordered)} one-second epochs of real held-out EEG, never seen in training, through the worker and the trained model ({html.escape(str(model_version))}). Alert threshold {meta['threshold']:.2f}. Kafka and the gateway are stand-ins in this local view; the automated pipeline runs the real ones.</p>
-<div class="flow">{flow}</div>
-<div class="sumrow"><div class="sum"><b>{tp}/{tp + fn}</b>seizures flagged</div><div class="sum"><b>{fp}</b>false alarms</div><div class="sum"><b>{tn}</b>seizure-free epochs passed</div></div>
-<div class="grid">{''.join(card_html)}</div>
-<p class="note">Waveform: raw EEG epoch. Bars: relative power in the delta, theta, alpha, beta and gamma bands, which the model also receives.</p></section></div>
-{story.render_footer_html()}
-</body></html>'''
-    out = ROOT / "demo" / "report.html"
-    out.write_text(page, encoding="utf-8")
-    print(f"wrote {out}  (caught {tp}/{tp + fn} seizures, {fp} false alarms)")
+    page = build_site.write_site(ROOT, ordered, meta, model_version, motion.build_data(ROOT))
+    flagged = sum(c["truth"] and c["alert"] for c in ordered); seizures = sum(c["truth"] for c in ordered)
+    false_alarms = sum(not c["truth"] and c["alert"] for c in ordered)
+    print(f"wrote {page}  ({flagged}/{seizures} seizure epochs flagged, {false_alarms} false alarms)")
     if args.open:
-        webbrowser.open(out.as_uri())
+        webbrowser.open(page.as_uri())
 
 
 if __name__ == "__main__":
