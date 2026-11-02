@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "demo"), str(ROOT / "services" / "ml-server"), str(ROOT / "services" / "worker"), str(ROOT / "simulator")]
 
 from run_demo import generate_stubs, validate  # noqa: E402
+import story  # noqa: E402
 
 BANDS = ["δ", "θ", "α", "β", "γ"]
 
@@ -125,8 +126,11 @@ main{{max-width:1100px;margin:auto}}h1{{margin:0 0 4px}}p.sub{{color:var(--mut);
 .truth{{font-size:12px;color:var(--mut)}}.truth.s{{color:#d6334a;font-weight:600}}
 .verdict{{text-align:right;font-weight:700}}.verdict small{{display:block;font-weight:400;color:var(--mut)}}
 .flag{{display:inline-block;background:#f5a62333;color:#b36b00;border-radius:4px;padding:0 6px;font-size:12px;font-weight:600}}
+{story.CSS}
 footer{{color:var(--mut);font-size:13px;margin-top:20px}}</style></head><body><main>
-<h1>NeuroStream.IO</h1><p class="sub">{len(ordered)} one-second chunks of <b>real held-out EEG</b> (never seen in training) through the real worker + trained model {html.escape(str(model_version))}. Alert threshold {meta['threshold']:.2f}.</p>
+<h1>NeuroStream.IO</h1><p class="sub">A digital watcher that listens to brain signals and rings an alarm when it sees a seizure.</p>
+{story.render_html()}
+<h2 class="live">See it working</h2><p class="sub">{len(ordered)} one-second chunks of <b>real held-out EEG</b> (never seen in training) through the real worker + trained model {html.escape(str(model_version))}. Alert threshold {meta['threshold']:.2f}.</p>
 <div class="flow">{flow}</div>
 <div class="stats"><div class="stat"><b>{tp}/{tp + fn}</b>seizures caught</div><div class="stat"><b>{fp}</b>false alarms</div><div class="stat"><b>{tn}</b>normals passed</div>
 <div class="stat"><b>{meta['metrics']['test']['recall']:.1%}</b>recall on full held-out test</div><div class="stat"><b>{meta['metrics']['test']['precision']:.1%}</b>precision on full held-out test</div></div>

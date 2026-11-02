@@ -4,7 +4,7 @@ Real code:  worker preprocessing/batcher/gRPC client/alerting, gRPC server, trai
 Real data:  recordings from the Bonn dataset that the model never saw during training.
 Stand-ins:  an in-memory queue replaces Kafka; a function replaces the NestJS gateway.
 
-Usage (repo root):  .venv\Scripts\python demo\run_demo.py --chunks 40
+Usage (repo root):  .venv/Scripts/python demo/run_demo.py --chunks 40
 """
 from __future__ import annotations
 
