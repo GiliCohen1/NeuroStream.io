@@ -1,0 +1,302 @@
+[
+ {
+  "file": "z/Z/Z042.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z023.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z020.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z036.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z065.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z048.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z013.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z054.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z015.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z014.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z067.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z037.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z066.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z078.txt",
+  "seizure": false
+ },
+ {
+  "file": "z/Z/Z009.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O062.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O100.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O006.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O086.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O060.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O049.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O059.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O074.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O094.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O050.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O002.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O077.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O023.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O079.txt",
+  "seizure": false
+ },
+ {
+  "file": "o/O/O045.txt",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N044.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N024.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N031.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N009.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N032.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N079.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N048.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N086.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N094.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N059.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N008.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N028.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N002.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N033.TXT",
+  "seizure": false
+ },
+ {
+  "file": "n/N/N061.TXT",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F096.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F097.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F095.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F031.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F061.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F070.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F074.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F076.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F004.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F053.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F017.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F066.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F089.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F094.txt",
+  "seizure": false
+ },
+ {
+  "file": "f/F/F028.txt",
+  "seizure": false
+ },
+ {
+  "file": "s/S/S027.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S011.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S003.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S055.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S033.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S075.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S022.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S059.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S073.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S087.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S006.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S098.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S002.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S042.txt",
+  "seizure": true
+ },
+ {
+  "file": "s/S/S038.txt",
+  "seizure": true
+ }
+]

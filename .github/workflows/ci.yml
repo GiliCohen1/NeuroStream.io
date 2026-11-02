@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Worker unit tests
+        run: |
+          pip install numpy scipy pytest
+          cd services/worker && python -m pytest tests -q
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: services/ingestion-gateway/package-lock.json
+      - name: Gateway tests (DTO + HTTP e2e with fake Kafka) and build
+        working-directory: services/ingestion-gateway
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+  e2e:
+    # Real stack: Kafka (KRaft) + NestJS gateway + Python worker + gRPC ML server, all in Docker.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install e2e client deps
+        run: pip install numpy requests
+      - name: Fetch Bonn EEG (needed to replay the held-out test recordings)
+        run: python training/download_data.py
+      - name: Build and start the stack
+        run: docker compose up -d --build
+      - name: Run end-to-end check
+        run: python scripts/e2e_check.py
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail=200
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

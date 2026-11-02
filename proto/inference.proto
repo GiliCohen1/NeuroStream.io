@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package neurostream.inference.v1;
+
+// Contract between the preprocessing worker and the ML inference server.
+service InferenceService {
+  rpc PredictBatch (PredictBatchRequest) returns (PredictBatchResponse);
+}
+
+message Sample {
+  string patient_id = 1;
+  int64 timestamp = 2;            // epoch millis, as received by the gateway
+  repeated float signal = 3;      // sliding-window normalized waveform
+  repeated float band_powers = 4; // relative power: delta, theta, alpha, beta, gamma
+}
+
+message PredictBatchRequest {
+  repeated Sample samples = 1;
+}
+
+message Prediction {
+  string patient_id = 1;
+  int64 timestamp = 2;
+  bool anomaly_detected = 3;
+  float confidence = 4;           // confidence that an anomaly is present, 0..1
+}
+
+message PredictBatchResponse {
+  repeated Prediction predictions = 1;
+  string model_version = 2;
+  float server_latency_ms = 3;
+}
