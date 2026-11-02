@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "demo"), str(ROOT / "services" / "ml-server"), str(ROOT / "services" / "worker"), str(ROOT / "simulator")]
 
 from run_demo import generate_stubs, validate  # noqa: E402
+import motion  # noqa: E402
 import story  # noqa: E402
 
 BANDS = ["δ", "θ", "α", "β", "γ"]
@@ -110,8 +111,8 @@ def main() -> None:
     chev = story.icon("chevron", 18)
     flow = chev.join(f'<div class="stage">{html.escape(a)}<small>{html.escape(b)}</small></div>' for a, b in stages)
     page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NeuroStream seizure detection</title><style>{story.CSS}</style></head><body>
-{story.render_top_html()}
+<title>NeuroStream seizure detection</title><style>{story.CSS}{motion.CSS}</style></head><body>
+{story.render_top_html(motion.render_html(motion.build_data(ROOT)))}
 <div class="wrap"><section class="block"><h2 class="live">See it working</h2>
 <p class="sub">{len(ordered)} one-second epochs of real held-out EEG, never seen in training, through the worker and the trained model ({html.escape(str(model_version))}). Alert threshold {meta['threshold']:.2f}. Kafka and the gateway are stand-ins in this local view; the automated pipeline runs the real ones.</p>
 <div class="flow">{flow}</div>

@@ -160,7 +160,7 @@ def _image_data_uri() -> str:
     return "data:image/jpeg;base64," + base64.b64encode(IMAGE.read_bytes()).decode()
 
 
-def render_top_html() -> str:
+def render_top_html(motion_html: str = "") -> str:
     problem = "".join(f'<div class="c">{icon(i)}<h3>{html.escape(t)}</h3><p>{html.escape(b)}</p></div>' for i, t, b in PROBLEM)
     questions = "".join(f"<dt>{html.escape(k)}</dt><dd>{html.escape(v)}</dd>" for k, v in QUESTIONS)
     helps = "".join(f"<li>{html.escape(x)}</li>" for x in HELP)
@@ -174,6 +174,7 @@ def render_top_html() -> str:
 <section class="block"><h2>{html.escape(PROBLEM_TITLE)}</h2><div class="cards">{problem}</div></section>
 <section class="block"><h2>{html.escape(QUESTION_TITLE)}</h2><div class="q"><dl>{questions}</dl></div>
 <div class="help"><div class="c"><h3>{html.escape(HELP_TITLE)}</h3><ul>{helps}</ul><p class="note">{html.escape(HELP_NOTE)}</p></div></div></section>
+{motion_html}
 <section class="block"><h2>{html.escape(WORK_TITLE)}</h2><div class="work">{work}</div>
 <h3 style="margin:24px 0 0;font-size:18px">{html.escape(RESULTS_TITLE)}</h3><div class="stats">{stats}</div></section>
 <section class="block"><h2>{html.escape(LIMITS_TITLE)}</h2><div class="limits">{html.escape(LIMITS)}</div></section>
