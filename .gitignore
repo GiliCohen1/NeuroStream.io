@@ -7,3 +7,4 @@ __pycache__/
 .pytest_cache/
 training/data/
 services/**/inference_pb2*.py
+demo/report.html
