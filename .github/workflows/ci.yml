@@ -40,8 +40,6 @@ jobs:
           python-version: "3.11"
       - name: Install e2e client deps
         run: pip install numpy requests
-      - name: Fetch Bonn EEG (needed to replay the held-out test recordings)
-        run: python training/download_data.py
       - name: Build and start the stack
         run: docker compose up -d --build
       - name: Run end-to-end check

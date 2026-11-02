@@ -69,3 +69,7 @@ cd services/ingestion-gateway && npm install && npm test   # 14 tests: DTO rules
 - **Delivery:** at-least-once. Offsets commit only after inference succeeds; if the ML server stays down past the retry budget the worker rewinds and retries. Malformed messages go to `neuro-dead-letter`.
 - **Model:** a 1-D CNN trained from scratch on the Bonn EEG benchmark (seizure vs. non-seizure, split by recording). That benchmark is *easy* (published models reach ~99%) and uses clean, single-channel, 1-second windows; it is NOT evidence of clinical performance on real hospital streams (noise, many patients, many channels, much rarer seizures).
 - Single-node Kafka, plaintext, no auth: laptop demo only.
+
+## Data attribution
+The model is trained on the University of Bonn EEG dataset (Andrzejak et al., 2001, Phys Rev E 64, 061907). Only the 75
+held-out test recordings are committed (`data/heldout/`) for the demo and CI; fetch the rest with `python training/download_data.py`.

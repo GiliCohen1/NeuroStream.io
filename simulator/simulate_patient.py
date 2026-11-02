@@ -36,7 +36,9 @@ class Replay:
     def __init__(self, root: Path, rng: np.random.Generator):
         self.rng = rng
         files = json.loads((root / "models" / "heldout_test_files.json").read_text())
-        load = lambda f: np.loadtxt(root / "training" / "data" / f["file"])
+        def load(f):  # committed held-out copies first, full training data as fallback
+            local = root / "data" / "heldout" / f["file"]
+            return np.loadtxt(local if local.exists() else root / "training" / "data" / f["file"])
         self.normal = [load(f) for f in files if not f["seizure"]]
         self.seizure = [load(f) for f in files if f["seizure"]]
 
