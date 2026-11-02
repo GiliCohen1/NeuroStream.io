@@ -40,13 +40,23 @@ jobs:
           python-version: "3.11"
       - name: Install e2e client deps
         run: pip install numpy requests
-      - name: Build and start the stack
-        run: docker compose up -d --build
+      - name: Build images
+        run: |
+          set -o pipefail
+          docker compose build --progress=plain 2>&1 | tee build.log
+      - name: Start the stack
+        run: docker compose up -d 2>&1 | tee up.log
       - name: Run end-to-end check
         run: python scripts/e2e_check.py
-      - name: Dump logs on failure
+      - name: Surface diagnostics on failure
+        # Publishes log tails as workflow annotations so failures are readable without downloading logs.
         if: failure()
-        run: docker compose logs --no-color --tail=200
+        run: |
+          emit() { echo "::error title=$1::$(tail -n 50 "$2" | tr -d '\r' | sed 's/\x1b\[[0-9;]*m//g; s/%/%25/g' | awk '{printf "%s%%0A", $0}')"; }
+          docker compose ps -a > ps.log 2>&1 || true
+          docker compose logs --no-color --tail=30 > stack.log 2>&1 || true
+          for f in build.log up.log ps.log stack.log; do [ -s "$f" ] && emit "$f (tail)" "$f"; done
+          true
       - name: Tear down
         if: always()
         run: docker compose down -v
