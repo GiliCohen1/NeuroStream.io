@@ -249,7 +249,7 @@
   <p class="arch-note">Malformed messages leave the main flow through a dead-letter topic, so one bad record never blocks the stream.</p>
   <div class="grid-3">
    <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-server"/></svg><h3>Delivery you can reason about</h3><p>At-least-once semantics. Offsets are committed only after inference succeeds, and failures rewind and retry with exponential backoff and jitter.</p></div>
-   <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-shield"/></svg><h3>Validation that resists leakage</h3><p>Splits by recording, a test set scored once, and a threshold tuned on validation data only. Results are reproducible from a seeded training script.</p></div>
+   <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-shield"/></svg><h3>Validation without recording leakage</h3><p>Splits by recording, a test set scored once, and a threshold tuned on validation data only. Results are reproducible from a seeded training script. Patient-independent validation is still to come.</p></div>
    <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-layers"/></svg><h3>One preprocessing, two places</h3><p>Training and serving import the same preprocessing code, which removes a common source of silent train and serve skew.</p></div>
    <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-check"/></svg><h3>Verified end to end</h3><p>Every push builds the full Docker stack in CI and replays held-out EEG through it. This caught three build-breaking bugs that unit tests had missed.</p></div>
    <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-network"/></svg><h3>Typed contracts</h3><p>The gateway, worker and inference service agree through a Protocol Buffers schema and validated DTOs, so interface drift fails fast.</p></div>
@@ -265,7 +265,7 @@
  <div class="wrap">
   <div class="sec-head reveal"><p class="eyebrow"><span class="num">07</span>Limits and next steps</p><h2 id="h-lim">What these results do and do not show</h2></div>
   <div class="limits reveal">
-   <p>The Bonn recordings are clean, single-channel and short. Clinical EEG is multichannel, noisy and seizure-sparse, which raises the false-alarm burden, so these figures are not evidence of clinical performance.</p>
+   <p>The Bonn recordings are clean, single-channel and short. Clinical EEG is multichannel, noisy and seizure-sparse, which raises the false-alarm burden, so these figures are not evidence of clinical performance. The data files carry no subject identifiers and the recordings come from only a handful of people, so a split by recording is not a split by patient and likely flatters performance on a new patient.</p>
    <p style="margin:0"><b>Next:</b> multichannel recordings (CHB-MIT), patient-independent validation, and false alarms per hour as a primary metric.</p>
   </div>
  </div>
