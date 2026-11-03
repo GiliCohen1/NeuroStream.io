@@ -48,7 +48,7 @@
     <li><a href="#decision">Decision</a></li>
     <li><a href="#evidence">Evidence</a></li>
     <li><a href="#engineering">Engineering</a></li>
-    <li><a href="#about">About</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
    </ul>
   </nav>
   <div class="nav-cta">
@@ -106,9 +106,9 @@
    <div class="card flat reveal">
     <h3>How it could help</h3>
     <ul class="ticks" style="margin-top:var(--s3)">
-     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg>Continuous screening between specialist reviews.</li>
-     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg>Triage: direct reading time to the segments the model flags first.</li>
-     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg>Earlier notification of the care team.</li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Continuous screening between specialist reviews.</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Triage: direct reading time to the segments the model flags first.</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Earlier notification of the care team.</span></li>
     </ul>
     <p class="small muted" style="margin:0">Decision support, not a diagnosis. The system flags; a clinician decides.</p>
    </div>
@@ -271,19 +271,40 @@
  </div>
 </section>
 
-<section class="sec alt" id="about" aria-labelledby="h-about">
- <div class="wrap about">
-  <div class="reveal">
-   <p class="eyebrow"><span class="num">08</span>About</p>
-   <h2 id="h-about" style="margin-bottom:var(--s4)">Where neuroscience meets backend engineering</h2>
-   <p>I am a software engineer with more than four years of backend and full-stack experience, mainly NestJS, TypeScript, Kafka and Python, and a background in neuroscience. NeuroStream is where those two meet: a model grounded in the physiology, delivered through the kind of reliable, observable system clinical software needs.</p>
-   <p>I am interested in teams building software for healthcare and life sciences, where understanding the signal and engineering the system both matter.</p>
+<section class="sec alt" id="capabilities" aria-labelledby="h-cap">
+ <div class="wrap">
+  <div class="sec-head reveal"><p class="eyebrow"><span class="num">08</span>Capabilities</p><h2 id="h-cap">What this system demonstrates</h2>
+   <p>NeuroStream takes a clinical question from research, through a validated model, to dependable software. Each capability points to evidence on this page or in the repository.</p></div>
+  <div class="grid-4">
+   <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-database"/></svg><h3>Research</h3>
+    <ul class="ticks">
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>A testable question, not just a feature</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Recording-level held-out validation, with the threshold tuned apart from the test set (<a href="#evidence">evidence</a>)</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Limits stated next to the results (<a href="#limits">limits</a>)</span></li>
+    </ul></div>
+   <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-network"/></svg><h3>AI and models</h3>
+    <ul class="ticks">
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>1D convolutional network trained from scratch on real EEG</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Waveform and band-power features in one model</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Score and threshold exposed as a clinical trade-off (<a href="#evidence">explorer</a>)</span></li>
+    </ul></div>
+   <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-shield"/></svg><h3>Healthcare software</h3>
+    <ul class="ticks">
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Decision support: it flags and never diagnoses</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Every alert traces to the exact one-second epoch</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Malformed data is isolated, not allowed to block the stream</span></li>
+    </ul></div>
+   <div class="card reveal"><svg class="i ic" aria-hidden="true"><use href="#i-server"/></svg><h3>Production engineering</h3>
+    <ul class="ticks">
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Kafka, gRPC and typed contracts (<a href="#engineering">architecture</a>)</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>At-least-once delivery, retries and a dead-letter topic</span></li>
+     <li><svg class="i sm" aria-hidden="true"><use href="#i-check"/></svg><span>Full stack rebuilt and verified in CI on every push</span></li>
+    </ul></div>
   </div>
-  <aside class="panel reveal" aria-label="Links">
-   <h3>Explore the work</h3>
-   <p>The full source, training code, metrics and CI pipeline are public.</p>
-   <a class="btn btn-primary" style="background:#fff;color:var(--navy-800)" href="https://github.com/GiliCohen1/NeuroStream.io" rel="noopener"><svg class="i sm" aria-hidden="true"><use href="#i-git"/></svg>View on GitHub</a>
-  </aside>
+  <div class="cta reveal">
+   <div><h3>Review the work</h3><p>Training code, metrics, tests and the CI pipeline are public. Next on the roadmap: multichannel recordings and patient-independent validation.</p></div>
+   <a class="btn btn-primary" href="https://github.com/GiliCohen1/NeuroStream.io" rel="noopener"><svg class="i sm" aria-hidden="true"><use href="#i-git"/></svg>View on GitHub</a>
+  </div>
  </div>
 </section>
 </main>
