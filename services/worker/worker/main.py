@@ -22,17 +22,19 @@ MIN_SIGNAL_LEN = 16
 
 
 class Worker:
-    def __init__(self, cfg: Config) -> None:
+    def __init__(self, cfg: Config, consumer=None, producer=None, client=None) -> None:
+        """Collaborators can be injected (used by the unit tests); by default the real ones are built."""
         self.cfg = cfg
         self.running = True
-        self.consumer = Consumer({
+        self.consumer = consumer if consumer is not None else Consumer({
             "bootstrap.servers": cfg.kafka_brokers,
             "group.id": cfg.group_id,
             "enable.auto.commit": False,
             "auto.offset.reset": "earliest",
         })
-        self.producer = Producer({"bootstrap.servers": cfg.kafka_brokers})
-        self.client = InferenceClient(cfg.inference_target, cfg.grpc_timeout_s, cfg.grpc_max_retries)
+        self.producer = producer if producer is not None else Producer({"bootstrap.servers": cfg.kafka_brokers})
+        self.client = client if client is not None else InferenceClient(
+            cfg.inference_target, cfg.grpc_timeout_s, cfg.grpc_max_retries)
         self.batcher: Batcher[tuple[Message, tuple]] = Batcher(cfg.batch_max_size, cfg.batch_max_wait_ms)
 
     # --- lifecycle -------------------------------------------------------
@@ -74,28 +76,38 @@ class Worker:
             item = (str(payload["patientId"]), int(payload["timestamp"]), signal_n, bands)
         except (ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
             log.warning("poison message %s[%d]@%d: %s", msg.topic(), msg.partition(), msg.offset(), exc)
+            # A committed offset covers EVERY earlier offset of the partition (Kafka offsets are cumulative).
+            # Messages still waiting in the batch buffer must be handled first; otherwise committing this
+            # offset would mark them done and a crash before the next flush would lose them.
+            if len(self.batcher) and not self._flush(unhandled=[msg]):
+                return  # inference unavailable: the buffered messages AND this one are redelivered
             self._dead_letter(msg, str(exc))
             self._commit([msg])
             return
         self.batcher.add((msg, item))
 
-    def _flush(self) -> None:
+    def _flush(self, unhandled: list[Message] | None = None) -> bool:
+        """Send the buffered batch for inference. Returns False if it could not be processed (nothing committed).
+
+        `unhandled` are messages the caller consumed but has not handled yet; they are rewound together with
+        the batch if processing fails, so they are redelivered instead of being skipped.
+        """
         batch = self.batcher.drain()
         msgs = [m for m, _ in batch]
         items = [i for _, i in batch]
         try:
             response = self.client.predict_batch(items)
         except InferenceUnavailable as exc:
-            # Do not commit: restart/rebalance will redeliver these messages.
+            # Do not commit: rewind so these messages are redelivered.
             log.error("inference unavailable, %d messages left uncommitted: %s", len(msgs), exc)
-            self._rewind(msgs)
-            return
+            self._rewind(msgs + list(unhandled or []))
+            return False
         except Exception as exc:  # non-retryable (e.g. INVALID_ARGUMENT): isolate the batch
             log.error("inference rejected batch: %s", exc)
             for m in msgs:
                 self._dead_letter(m, f"inference error: {exc}")
             self._commit(msgs)
-            return
+            return True
 
         model_version = response.model_version
         for p in response.predictions:
@@ -104,6 +116,7 @@ class Worker:
             if p.anomaly_detected:
                 dispatch_alert(build_alert(p.patient_id, p.timestamp, p.confidence, model_version))
         self._commit(msgs)
+        return True
 
     # --- kafka helpers ---------------------------------------------------
     def _commit(self, msgs: list[Message]) -> None:
